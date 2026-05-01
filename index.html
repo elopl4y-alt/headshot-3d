@@ -3,45 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🔥 CS: SIMPLE | Тактический шутер с бомбой и командами</title>
+    <title>🎯 CS: ARENA | Тактический шутер с бомбой</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body { overflow: hidden; font-family: 'Courier New', monospace; }
+        canvas { display: block; cursor: crosshair; }
 
-        body {
-            overflow: hidden;
-            font-family: 'Courier New', monospace;
-        }
-
-        canvas {
-            display: block;
-            cursor: crosshair;
-        }
-
-        /* Основное UI */
         .ui {
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 100;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(5px);
-            padding: 12px 18px;
+            padding: 10px 18px;
             border-radius: 12px;
             border-left: 4px solid #ffaa00;
+            z-index: 100;
             pointer-events: none;
         }
-
-        .money {
-            color: #ffaa00;
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-
+        .money { color: #ffaa00; font-size: 1.3rem; font-weight: bold; }
+        
         .scoreboard {
             position: fixed;
             top: 20px;
@@ -49,18 +30,12 @@
             background: rgba(0,0,0,0.8);
             padding: 10px 20px;
             border-radius: 12px;
-            text-align: center;
             font-weight: bold;
+            z-index: 100;
             pointer-events: none;
         }
-
-        .score-t {
-            color: #ff6666;
-        }
-
-        .score-ct {
-            color: #6666ff;
-        }
+        .score-t { color: #ff6666; }
+        .score-ct { color: #6666ff; }
 
         .round-info {
             position: fixed;
@@ -71,7 +46,7 @@
             padding: 8px 25px;
             border-radius: 30px;
             font-weight: bold;
-            font-size: 1rem;
+            z-index: 100;
             pointer-events: none;
         }
 
@@ -83,91 +58,10 @@
             padding: 8px 15px;
             border-radius: 10px;
             font-weight: bold;
+            z-index: 100;
             pointer-events: none;
         }
 
-        .bomb-planted { color: #ff4444; }
-        .bomb-defusing { color: #44ff44; }
-
-        /* Магазин */
-        .shop {
-            position: fixed;
-            bottom: 120px;
-            right: 20px;
-            width: 280px;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid #ffaa00;
-            border-radius: 12px;
-            padding: 15px;
-            z-index: 200;
-            transform: translateX(0);
-            transition: transform 0.3s;
-            pointer-events: auto;
-        }
-
-        .shop.hidden {
-            transform: translateX(320px);
-        }
-
-        .shop h3 {
-            color: #ffaa00;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .shop-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 12px;
-            margin: 5px 0;
-            background: #1a1a2e;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .shop-item:hover {
-            background: #2a2a4e;
-            transform: scale(1.02);
-        }
-
-        /* Хитбокс и прицел */
-        .crosshair {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 200;
-        }
-
-        .crosshair::before,
-        .crosshair::after {
-            content: '';
-            position: absolute;
-            background: #0f0;
-        }
-
-        .crosshair::before {
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            transform: translateY(-50%);
-        }
-
-        .crosshair::after {
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            transform: translateX(-50%);
-        }
-
-        /* ХП и аммо */
         .health-bar {
             position: fixed;
             bottom: 30px;
@@ -179,14 +73,9 @@
             overflow: hidden;
             border: 1px solid #0f0;
             pointer-events: none;
+            z-index: 100;
         }
-
-        .health-fill {
-            width: 100%;
-            height: 100%;
-            background: #ff3333;
-            transition: width 0.2s;
-        }
+        .health-fill { width: 100%; height: 100%; background: #ff3333; transition: width 0.2s; }
 
         .ammo {
             position: fixed;
@@ -198,39 +87,40 @@
             font-size: 1.4rem;
             font-weight: bold;
             color: #0f0;
-            font-family: monospace;
-            pointer-events: none;
-        }
-
-        /* Радар */
-        .radar {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 150px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 50%;
-            border: 2px solid #0f0;
-            pointer-events: none;
             z-index: 100;
+            pointer-events: none;
         }
 
-        .radar-dot {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #0f0;
-            border-radius: 50%;
+        .crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
             transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 200;
+        }
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background: #0f0;
+        }
+        .crosshair::before {
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+        .crosshair::after {
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            transform: translateX(-50%);
         }
 
-        .radar-enemy {
-            background: #ff0000;
-        }
-
-        /* Меню выбора команды */
         .team-select {
             position: fixed;
             top: 50%;
@@ -244,7 +134,6 @@
             z-index: 500;
             border: 2px solid #ffaa00;
         }
-
         .team-btn {
             display: block;
             width: 220px;
@@ -256,13 +145,34 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
+        .team-btn:hover { background: #ffaa00; color: #000; }
 
-        .team-btn:hover {
-            background: #ffaa00;
-            color: #000;
+        .shop {
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            width: 260px;
+            background: rgba(0,0,0,0.95);
+            border: 2px solid #ffaa00;
+            border-radius: 12px;
+            padding: 15px;
+            z-index: 200;
+            transform: translateX(0);
+            transition: transform 0.3s;
         }
+        .shop.hidden { transform: translateX(320px); }
+        .shop h3 { color: #ffaa00; text-align: center; margin-bottom: 12px; }
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #1a1a2e;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .shop-item:hover { background: #2a2a4e; }
 
         .game-over {
             position: fixed;
@@ -277,11 +187,7 @@
             border: 2px solid #ff4444;
             z-index: 1000;
         }
-
-        .hidden {
-            display: none;
-        }
-
+        .hidden { display: none; }
         .controls-info {
             position: fixed;
             bottom: 5px;
@@ -292,41 +198,27 @@
             border-radius: 8px;
             font-size: 0.6rem;
             color: #888;
-            pointer-events: none;
             z-index: 100;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <div class="ui">
-        💰 ДЕНЬГИ: <span class="money" id="money">5000</span>$<br>
-        🔫 УБИЙСТВ: <span id="kills">0</span>
-    </div>
-    <div class="scoreboard">
-        🔥 <span class="score-t" id="scoreT">0</span> : <span class="score-ct" id="scoreCT">0</span> 🔫
-    </div>
-    <div class="round-info" id="roundInfo">
-        🔥 РАУНД 1 | ТЕРРОРИСТЫ
-    </div>
-    <div class="bomb-status" id="bombStatus">
-        💣 БОМБА НЕ УСТАНОВЛЕНА
-    </div>
-    <div class="health-bar">
-        <div class="health-fill" id="healthFill"></div>
-    </div>
-    <div class="ammo" id="ammoText">
-        🔫 30 / 30
-    </div>
+    <div class="ui">💰 ДЕНЬГИ: <span class="money" id="money">5000</span>$<br>🔫 УБИЙСТВ: <span id="kills">0</span></div>
+    <div class="scoreboard">🔥 <span class="score-t" id="scoreT">0</span> : <span class="score-ct" id="scoreCT">0</span> 🔫</div>
+    <div class="round-info" id="roundInfo">ВЫБЕРИТЕ КОМАНДУ</div>
+    <div class="bomb-status" id="bombStatus">💣 БОМБА НЕ УСТАНОВЛЕНА</div>
+    <div class="health-bar"><div class="health-fill" id="healthFill"></div></div>
+    <div class="ammo" id="ammoText">🔫 30 / 30</div>
     <div class="crosshair"></div>
-    <div class="radar" id="radar"></div>
 
     <div class="shop hidden" id="shop">
         <h3>🛒 МАГАЗИН</h3>
-        <div class="shop-item" data-weapon="pistol">🔫 PISTOL - <span class="price">300$</span></div>
-        <div class="shop-item" data-weapon="rifle">🔫 RIFLE - <span class="price">1500$</span></div>
-        <div class="shop-item" data-weapon="sniper">🎯 SNIPER - <span class="price">3000$</span></div>
-        <div class="shop-item" data-weapon="knife">🗡️ KNIFE - <span class="price">200$</span></div>
-        <button id="closeShop" style="width:100%; margin-top:10px; padding:6px; background:#ffaa00; border:none; border-radius:6px;">ЗАКРЫТЬ (B)</button>
+        <div class="shop-item" data-weapon="pistol">🔫 PISTOL - 300$</div>
+        <div class="shop-item" data-weapon="rifle">🔫 RIFLE - 1500$</div>
+        <div class="shop-item" data-weapon="sniper">🎯 SNIPER - 3000$</div>
+        <div class="shop-item" data-weapon="knife">🗡️ KNIFE - 200$</div>
+        <button id="closeShop" style="width:100%; margin-top:10px; padding:6px; background:#ffaa00; border:none; border-radius:6px; cursor:pointer;">ЗАКРЫТЬ (B)</button>
     </div>
 
     <div class="team-select" id="teamMenu">
@@ -341,115 +233,78 @@
         <button onclick="location.reload()">🔫 НОВАЯ ИГРА</button>
     </div>
 
-    <div class="controls-info">
-        🎮 WASD — движение | 🖱️ Мышь — прицел | 🔫 ЛКМ — выстрел | R — перезарядка | B — магазин | E — обезвредить (у бомбы) | ESC — курсор
-    </div>
+    <div class="controls-info">WASD — движение | 🖱️ Мышь — прицел | 🔫 ЛКМ — выстрел | R — перезарядка | B — магазин | E — обезвредить бомбу</div>
 
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-            }
-        }
+        { "imports": { "three": "https://unpkg.com/three@0.128.0/build/three.module.js" } }
     </script>
 
     <script type="module">
         import * as THREE from 'three';
 
         // ============ ИГРОВЫЕ ПАРАМЕТРЫ ============
-        let playerTeam = 't'; // t или ct
+        let playerTeam = null;
         let scoreT = 0, scoreCT = 0;
-        let round = 1;
         let money = 5000;
         let kills = 0;
-        let bombActive = false;
         let bombPlanted = false;
         let bombPosition = null;
+        let bombTimer = null;
         let defusing = false;
         let defuseTimer = 0;
         let gameActive = true;
         
         // Оружие
         let currentWeapon = 'rifle';
-        let ammo = 30;
-        let maxAmmo = 30;
-        let weaponDamage = 25;
-        let weaponReloadTime = 2000;
-        
+        let ammo = 30, maxAmmo = 30;
+        let weaponDamage = 25, weaponReloadTime = 2000;
         const weapons = {
-            pistol: { damage: 15, ammo: 15, reloadTime: 1500, price: 300, name: 'PISTOL' },
-            rifle: { damage: 25, ammo: 30, reloadTime: 2000, price: 1500, name: 'RIFLE' },
-            sniper: { damage: 50, ammo: 5, reloadTime: 2500, price: 3000, name: 'SNIPER' },
-            knife: { damage: 40, ammo: 999, reloadTime: 500, price: 200, name: 'KNIFE' }
+            pistol: { damage: 15, ammo: 15, reloadTime: 1500, price: 300 },
+            rifle: { damage: 25, ammo: 30, reloadTime: 2000, price: 1500 },
+            sniper: { damage: 50, ammo: 5, reloadTime: 2500, price: 3000 },
+            knife: { damage: 40, ammo: 999, reloadTime: 500, price: 200 }
         };
         
-        function buyWeapon(weaponName) {
-            const w = weapons[weaponName];
+        function buyWeapon(name) {
+            const w = weapons[name];
             if (money >= w.price) {
                 money -= w.price;
-                currentWeapon = weaponName;
+                currentWeapon = name;
                 ammo = w.ammo;
                 maxAmmo = w.ammo;
                 weaponDamage = w.damage;
                 weaponReloadTime = w.reloadTime;
                 updateUI();
                 document.getElementById('ammoText').innerHTML = `🔫 ${ammo} / ${maxAmmo}`;
-                return true;
             }
-            return false;
         }
         
-        // ============ НАСТРОЙКИ УПРАВЛЕНИЯ ============
-        let invertMouse = false;
-        let invertWASD = false;
-        
-        // ============ ТРИДЭ ============
+        // ============ Three.js ============
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0a0a2a);
         scene.fog = new THREE.FogExp2(0x0a0a2a, 0.008);
-        
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 1.6, 0);
-        
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         document.body.appendChild(renderer.domElement);
         
-        // Карта и коллизии
-        const walls = [];
-        const bombSites = [{ x: 8, z: 5 }, { x: -6, z: -4 }];
+        // Карта
+        const floorGeo = new THREE.PlaneGeometry(40, 40);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x3a3a4a, roughness: 0.8 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
         
-        function createMap() {
-            // Пол
-            const floorGeo = new THREE.PlaneGeometry(40, 40);
-            const floorMat = new THREE.MeshStandardMaterial({ color: 0x3a3a4a, roughness: 0.8 });
-            const floor = new THREE.Mesh(floorGeo, floorMat);
-            floor.rotation.x = -Math.PI / 2;
-            floor.receiveShadow = true;
-            scene.add(floor);
-            
-            // Стены для навигации
-            const wallMat = new THREE.MeshStandardMaterial({ color: 0x5a5a6a });
-            const wallPositions = [
-                [-15, 0, -15, 30, 5, 1], [15, 0, -15, 1, 5, 30],
-                [-15, 0, 15, 30, 5, 1], [-15, 0, -15, 1, 5, 30]
-            ];
-            wallPositions.forEach(w => {
-                const wall = new THREE.Mesh(new THREE.BoxGeometry(w[3], w[4], w[5]), wallMat);
-                wall.position.set(w[0], w[1], w[2]);
-                wall.receiveShadow = true;
-                scene.add(wall);
-                walls.push(wall);
-            });
-            
-            // Точки бомбы (визуальные)
-            bombSites.forEach((site, i) => {
-                const marker = new THREE.Mesh(new THREE.BoxGeometry(1, 0.1, 1), new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x330000 }));
-                marker.position.set(site.x, 0.05, site.z);
-                scene.add(marker);
-            });
-        }
+        // Точки бомбы
+        const bombSites = [{ x: 8, z: 5 }, { x: -6, z: -4 }];
+        bombSites.forEach(site => {
+            const marker = new THREE.Mesh(new THREE.BoxGeometry(1, 0.1, 1), new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x330000 }));
+            marker.position.set(site.x, 0.05, site.z);
+            scene.add(marker);
+        });
         
         // ============ БОТЫ ============
         class Bot {
@@ -459,92 +314,71 @@
                 this.x = x;
                 this.z = z;
                 this.speed = 0.035;
-                this.size = 0.5;
-                this.attackCooldown = 0;
-                this.target = null;
-                
+                this.attackCd = 0;
                 const color = team === 't' ? 0xcc3333 : 0x3366cc;
                 const geometry = new THREE.BoxGeometry(0.7, 1.2, 0.7);
-                const material = new THREE.MeshStandardMaterial({ color: color, emissive: team === 't' ? 0x330000 : 0x002233 });
+                const material = new THREE.MeshStandardMaterial({ color, emissive: team === 't' ? 0x330000 : 0x002233 });
                 this.mesh = new THREE.Mesh(geometry, material);
                 this.mesh.position.set(x, 0.6, z);
                 this.mesh.castShadow = true;
                 scene.add(this.mesh);
             }
-            
-            update(playerPos, enemies, bombPlantedFlag, bombPos) {
+            update(playerX, playerZ, enemies, bombPlantedFlag, bombPos) {
                 if (this.hp <= 0) return;
                 
-                // Поиск цели
-                let closestDist = 15;
-                let closestEnemy = null;
-                enemies.forEach(e => {
-                    if (e !== this && e.hp > 0) {
-                        const dist = Math.hypot(this.x - e.x, this.z - e.z);
-                        if (dist < closestDist) {
-                            closestDist = dist;
-                            closestEnemy = e;
-                        }
-                    }
-                });
-                
                 // Логика бомбы
-                if (this.team === 't' && !bombPlantedFlag && bombActive) {
-                    // Террористы идут ставить бомбу
-                    const bombSite = bombSites[0];
-                    const distToSite = Math.hypot(this.x - bombSite.x, this.z - bombSite.z);
-                    if (distToSite < 2) {
-                        if (!bombPlantedFlag && bombActive) {
-                            bombPlanted = true;
-                            bombPosition = { x: bombSite.x, z: bombSite.z };
-                        }
+                if (this.team === 't' && !bombPlantedFlag) {
+                    const site = bombSites[0];
+                    const dist = Math.hypot(this.x - site.x, this.z - site.z);
+                    if (dist < 1.5 && !bombPlantedFlag && !bombPlanted) {
+                        bombPlanted = true;
+                        bombPosition = { x: site.x, z: site.z };
+                        bombTimer = 450;
+                        document.getElementById('bombStatus').innerHTML = '💣 БОМБА УСТАНОВЛЕНА! 45';
                     } else {
-                        this.moveTo(bombSite.x, bombSite.z);
+                        this.moveTo(site.x, site.z);
                         return;
                     }
-                } else if (this.team === 'ct' && bombPlantedFlag && bombPosition) {
-                    // КТ идут обезвреживать
-                    const distToBomb = Math.hypot(this.x - bombPosition.x, this.z - bombPosition.z);
-                    if (distToBomb < 1.5) {
-                        // Обезвреживание
-                        if (!defusing && gameActive) {
-                            defusing = true;
-                            defuseTimer = 100;
-                        }
+                } else if (this.team === 'ct' && bombPlantedFlag && bombPos) {
+                    const dist = Math.hypot(this.x - bombPos.x, this.z - bombPos.z);
+                    if (dist < 1.5 && !defusing) {
+                        defusing = true;
+                        defuseTimer = 100;
                     } else {
-                        this.moveTo(bombPosition.x, bombPosition.z);
+                        this.moveTo(bombPos.x, bombPos.z);
                         return;
                     }
                 }
                 
-                if (closestEnemy) {
-                    // Атака
-                    this.moveTo(closestEnemy.x, closestEnemy.z);
-                    if (closestDist < 2 && this.attackCooldown <= 0) {
-                        closestEnemy.hp -= 15;
-                        this.attackCooldown = 30;
-                        if (closestEnemy.hp <= 0) {
-                            if (closestEnemy === window.player) {
-                                // Игрок умер
-                                gameActive = false;
-                                document.getElementById('gameOverText').innerHTML = '💀 ВЫ УМЕРЛИ 💀';
-                                document.getElementById('finalKills').textContent = kills;
-                                document.getElementById('gameOverScreen').classList.remove('hidden');
-                            }
+                // Поиск врага
+                let closest = null;
+                let closestDist = 12;
+                enemies.forEach(e => {
+                    if (e !== this && e.hp > 0) {
+                        const d = Math.hypot(this.x - e.x, this.z - e.z);
+                        if (d < closestDist) { closestDist = d; closest = e; }
+                    }
+                });
+                if (closest) {
+                    this.moveTo(closest.x, closest.z);
+                    if (closestDist < 1.5 && this.attackCd <= 0) {
+                        closest.hp -= 15;
+                        this.attackCd = 30;
+                        if (closest.hp <= 0 && closest === window.playerObj) {
+                            gameActive = false;
+                            document.getElementById('gameOverText').innerHTML = '💀 ВЫ УМЕРЛИ 💀';
+                            document.getElementById('finalKills').textContent = kills;
+                            document.getElementById('gameOverScreen').classList.remove('hidden');
                         }
                     }
                 } else {
-                    // Патруль
-                    const angle = Date.now() * 0.001 * this.speed;
+                    const angle = Date.now() * 0.001;
                     this.moveTo(Math.sin(angle) * 8, Math.cos(angle) * 8);
                 }
-                
-                if (this.attackCooldown > 0) this.attackCooldown--;
+                if (this.attackCd > 0) this.attackCd--;
             }
-            
             moveTo(tx, tz) {
-                const dx = tx - this.x;
-                const dz = tz - this.z;
+                const dx = tx - this.x, dz = tz - this.z;
                 const dist = Math.hypot(dx, dz);
                 if (dist > 0.2) {
                     this.x += (dx / dist) * this.speed;
@@ -556,8 +390,8 @@
         }
         
         let bots = [];
-        let player = { hp: 100, x: 0, z: 0, team: 't' };
-        window.player = player;
+        let playerObj = { hp: 100, x: 0, z: 0, team: 't' };
+        window.playerObj = playerObj;
         
         function spawnBots() {
             bots.forEach(b => scene.remove(b.mesh));
@@ -570,159 +404,91 @@
             }
         }
         
-        // ============ ОРУЖИЕ ИГРОКА ============
-        let reloading = false;
-        let shootCooldown = 0;
-        let invincibleTimer = 0;
+        // ============ ИГРОК ============
+        let reloading = false, shootCd = 0, invincibleTimer = 0;
+        const keyState = { w: false, a: false, s: false, d: false };
+        let yaw = -Math.PI / 2, pitch = 0;
         
         function shoot() {
-            if (!gameActive) return;
-            if (reloading || shootCooldown > 0) return;
+            if (!gameActive || reloading || shootCd > 0) return;
             if (ammo <= 0) { reload(); return; }
-            
-            ammo--;
-            shootCooldown = 10;
+            ammo--; shootCd = 10;
             document.getElementById('ammoText').innerHTML = `🔫 ${ammo} / ${maxAmmo}`;
             
             const raycaster = new THREE.Raycaster();
-            const direction = new THREE.Vector3(Math.sin(window.yaw), Math.sin(window.pitch), Math.cos(window.yaw)).normalize();
-            raycaster.set(camera.position, direction);
-            
-            const enemyMeshes = bots.filter(b => b.team !== playerTeam && b.hp > 0).map(b => b.mesh);
-            const intersects = raycaster.intersectObjects(enemyMeshes);
-            
-            if (intersects.length > 0) {
-                const hitBot = bots.find(b => b.mesh === intersects[0].object);
-                if (hitBot && hitBot.hp > 0) {
-                    hitBot.hp -= weaponDamage;
-                    if (hitBot.hp <= 0) {
-                        kills++;
-                        money += 300;
-                        updateUI();
-                    }
+            const dir = new THREE.Vector3(Math.sin(yaw), Math.sin(pitch), Math.cos(yaw)).normalize();
+            raycaster.set(camera.position, dir);
+            const enemies = bots.filter(b => b.team !== playerTeam && b.hp > 0).map(b => b.mesh);
+            const hit = raycaster.intersectObjects(enemies);
+            if (hit.length) {
+                const bot = bots.find(b => b.mesh === hit[0].object);
+                if (bot) {
+                    bot.hp -= weaponDamage;
+                    if (bot.hp <= 0) { kills++; money += 300; updateUI(); }
                 }
             }
-            
             const flash = new THREE.PointLight(0xffaa00, 2, 10);
             flash.position.copy(camera.position);
             scene.add(flash);
             setTimeout(() => scene.remove(flash), 50);
         }
-        
         function reload() {
             if (reloading) return;
             reloading = true;
-            setTimeout(() => {
-                ammo = maxAmmo;
-                reloading = false;
-                document.getElementById('ammoText').innerHTML = `🔫 ${ammo} / ${maxAmmo}`;
-            }, weaponReloadTime);
+            setTimeout(() => { ammo = maxAmmo; reloading = false; document.getElementById('ammoText').innerHTML = `🔫 ${ammo} / ${maxAmmo}`; }, weaponReloadTime);
         }
-        
         function updateUI() {
             document.getElementById('money').textContent = money;
             document.getElementById('kills').textContent = kills;
-            document.getElementById('healthFill').style.width = `${(player.hp / 100) * 100}%`;
+            document.getElementById('healthFill').style.width = `${(playerObj.hp / 100) * 100}%`;
             document.getElementById('scoreT').textContent = scoreT;
             document.getElementById('scoreCT').textContent = scoreCT;
         }
         
-        function toggleShop() {
-            document.getElementById('shop').classList.toggle('hidden');
-        }
-        
-        // ============ ДВИЖЕНИЕ ИГРОКА ============
-        const keyState = { w: false, a: false, s: false, d: false };
-        window.yaw = -Math.PI / 2;
-        window.pitch = 0;
-        
+        // Управление
         document.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase();
-            if (key === 'w') keyState.w = true;
-            if (key === 'a') keyState.a = true;
-            if (key === 's') keyState.s = true;
-            if (key === 'd') keyState.d = true;
-            if (key === 'r') reload();
-            if (key === 'b') toggleShop();
-            if (key === 'e' && bombPlanted && playerTeam === 'ct') {
-                defusing = true;
-                defuseTimer = 100;
-            }
-            if (key === 'escape') document.exitPointerLock();
+            const k = e.key.toLowerCase();
+            if (k === 'w') keyState.w = true;
+            if (k === 'a') keyState.a = true;
+            if (k === 's') keyState.s = true;
+            if (k === 'd') keyState.d = true;
+            if (k === 'r') reload();
+            if (k === 'b') document.getElementById('shop').classList.toggle('hidden');
+            if (k === 'e' && bombPlanted && playerTeam === 'ct' && !defusing) { defusing = true; defuseTimer = 100; }
+            if (k === 'escape') document.exitPointerLock();
         });
-        
         document.addEventListener('keyup', (e) => {
-            const key = e.key.toLowerCase();
-            if (key === 'w') keyState.w = false;
-            if (key === 'a') keyState.a = false;
-            if (key === 's') keyState.s = false;
-            if (key === 'd') keyState.d = false;
+            const k = e.key.toLowerCase();
+            if (k === 'w') keyState.w = false;
+            if (k === 'a') keyState.a = false;
+            if (k === 's') keyState.s = false;
+            if (k === 'd') keyState.d = false;
         });
-        
-        renderer.domElement.addEventListener('click', () => {
-            renderer.domElement.requestPointerLock();
-        });
-        
+        renderer.domElement.addEventListener('click', () => renderer.domElement.requestPointerLock());
         document.addEventListener('mousemove', (e) => {
             if (document.pointerLockElement === renderer.domElement) {
-                let deltaY = e.movementY * 0.002;
-                if (invertMouse) deltaY = -deltaY;
-                window.pitch += deltaY;
-                window.pitch = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, window.pitch));
-                window.yaw += e.movementX * 0.002;
+                pitch += e.movementY * 0.002;
+                pitch = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, pitch));
+                yaw += e.movementX * 0.002;
             }
         });
         
         function updateMovement() {
             let move = { x: 0, z: 0 };
-            if (invertWASD) {
-                if (keyState.w) move.z += 1;
-                if (keyState.s) move.z -= 1;
-                if (keyState.a) move.x += 1;
-                if (keyState.d) move.x -= 1;
-            } else {
-                if (keyState.w) move.z -= 1;
-                if (keyState.s) move.z += 1;
-                if (keyState.a) move.x -= 1;
-                if (keyState.d) move.x += 1;
-            }
-            if (move.x !== 0 || move.z !== 0) {
-                const len = Math.hypot(move.x, move.z);
-                move.x /= len;
-                move.z /= len;
-            }
-            const forward = new THREE.Vector3(Math.sin(window.yaw), 0, Math.cos(window.yaw));
-            const right = new THREE.Vector3(Math.cos(window.yaw), 0, -Math.sin(window.yaw));
-            let newX = player.x + (forward.x * move.z + right.x * move.x) * 0.15;
-            let newZ = player.z + (forward.z * move.z + right.z * move.x) * 0.15;
-            newX = Math.max(-14, Math.min(14, newX));
-            newZ = Math.max(-14, Math.min(14, newZ));
-            player.x = newX;
-            player.z = newZ;
-            camera.position.set(player.x, 1.6, player.z);
-        }
-        
-        // ============ РАДАР ============
-        function updateRadar() {
-            const radar = document.getElementById('radar');
-            radar.innerHTML = '';
-            bots.forEach(bot => {
-                if (bot.hp <= 0) return;
-                const dx = bot.x - player.x;
-                const dz = bot.z - player.z;
-                const dist = Math.hypot(dx, dz);
-                if (dist < 12) {
-                    const angle = Math.atan2(dz, dx) - window.yaw;
-                    const r = Math.min(dist, 10) / 10 * 60;
-                    const x = 75 + Math.sin(angle) * r;
-                    const y = 75 - Math.cos(angle) * r;
-                    const dot = document.createElement('div');
-                    dot.className = `radar-dot ${bot.team !== playerTeam ? 'radar-enemy' : ''}`;
-                    dot.style.left = x + 'px';
-                    dot.style.top = y + 'px';
-                    radar.appendChild(dot);
-                }
-            });
+            if (keyState.w) move.z -= 1;
+            if (keyState.s) move.z += 1;
+            if (keyState.a) move.x -= 1;
+            if (keyState.d) move.x += 1;
+            if (move.x !== 0 || move.z !== 0) { const l = Math.hypot(move.x, move.z); move.x /= l; move.z /= l; }
+            const forward = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw));
+            const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+            let nx = playerObj.x + (forward.x * move.z + right.x * move.x) * 0.15;
+            let nz = playerObj.z + (forward.z * move.z + right.z * move.x) * 0.15;
+            nx = Math.max(-14, Math.min(14, nx));
+            nz = Math.max(-14, Math.min(14, nz));
+            playerObj.x = nx;
+            playerObj.z = nz;
+            camera.position.set(playerObj.x, 1.6, playerObj.z);
         }
         
         // ============ ОБНОВЛЕНИЕ ============
@@ -730,26 +496,20 @@
             if (!gameActive) return;
             updateMovement();
             camera.rotation.order = 'YXZ';
-            camera.rotation.y = window.yaw;
-            camera.rotation.x = window.pitch;
+            camera.rotation.y = yaw;
+            camera.rotation.x = pitch;
             
-            // Обновление ботов
-            const enemyBots = bots.filter(b => b.team !== playerTeam);
-            bots.forEach(bot => {
-                if (bot.hp > 0) {
-                    bot.update({ x: player.x, z: player.z }, bots, bombPlanted, bombPosition);
-                }
-            });
+            const enemies = bots.filter(b => b.team !== playerTeam);
+            bots.forEach(b => b.update(playerObj.x, playerObj.z, bots, bombPlanted, bombPosition));
             
-            // Урон игроку от ботов
-            bots.forEach(bot => {
-                if (bot.team !== playerTeam && bot.hp > 0 && invincibleTimer <= 0) {
-                    const dist = Math.hypot(bot.x - player.x, bot.z - player.z);
-                    if (dist < 1) {
-                        player.hp -= 10;
+            // Урон игроку
+            bots.forEach(b => {
+                if (b.team !== playerTeam && b.hp > 0 && invincibleTimer <= 0) {
+                    if (Math.hypot(b.x - playerObj.x, b.z - playerObj.z) < 1) {
+                        playerObj.hp -= 10;
                         invincibleTimer = 30;
                         updateUI();
-                        if (player.hp <= 0) {
+                        if (playerObj.hp <= 0) {
                             gameActive = false;
                             document.getElementById('gameOverText').innerHTML = '💀 ВЫ УМЕРЛИ 💀';
                             document.getElementById('finalKills').textContent = kills;
@@ -759,22 +519,21 @@
                 }
             });
             
-            // Бомба таймер
-            if (bombPlanted && bombPosition) {
+            // Бомба
+            if (bombPlanted && bombTimer !== null) {
                 if (defusing) {
                     defuseTimer--;
                     document.getElementById('bombStatus').innerHTML = `🔧 ОБЕЗВРЕЖИВАНИЕ... ${Math.floor(defuseTimer / 10)}`;
                     if (defuseTimer <= 0) {
                         bombPlanted = false;
                         defusing = false;
-                        bombPosition = null;
+                        bombTimer = null;
                         document.getElementById('bombStatus').innerHTML = '✅ БОМБА ОБЕЗВРЕЖЕНА!';
                         scoreCT++;
                         updateUI();
                         setTimeout(() => location.reload(), 2000);
                     }
                 } else {
-                    bombTimer = bombTimer || 450;
                     bombTimer--;
                     document.getElementById('bombStatus').innerHTML = `💣 БОМБА УСТАНОВЛЕНА! ${Math.floor(bombTimer / 10)}`;
                     if (bombTimer <= 0) {
@@ -787,49 +546,33 @@
             }
             
             if (invincibleTimer > 0) invincibleTimer--;
-            if (shootCooldown > 0) shootCooldown--;
-            
-            updateRadar();
+            if (shootCd > 0) shootCd--;
         }
         
         // ============ ВЫБОР КОМАНДЫ ============
         document.querySelectorAll('.team-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 playerTeam = btn.dataset.team;
-                player.team = playerTeam;
-                bombActive = true;
+                playerObj.team = playerTeam;
                 document.getElementById('teamMenu').classList.add('hidden');
-                document.getElementById('roundInfo').innerHTML = playerTeam === 't' ? '🔥 ТЕРРОРИСТЫ | УСТАНОВИТЕ БОМБУ (BOTS СТАВЯТ АВТОМАТИЧЕСКИ)' : '🔫 КОНТР-ТЕРРОРИСТЫ | ОБЕЗВРЕДЬТЕ БОМБУ (E)';
-                startGame();
-            });
-        });
-        
-        function startGame() {
-            gameActive = true;
-            player.hp = 100;
-            player.x = 0;
-            player.z = 0;
-            kills = 0;
-            money = 5000;
-            bombPlanted = false;
-            defusing = false;
-            bombTimer = null;
-            updateUI();
-            spawnBots();
-            createMap();
-        }
-        
-        // Магазин
-        document.querySelectorAll('.shop-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const weapon = item.dataset.weapon;
-                buyWeapon(weapon);
+                document.getElementById('roundInfo').innerHTML = playerTeam === 't' ? '🔥 ТЕРРОРИСТЫ | УСТАНОВИТЕ БОМБУ' : '🔫 КОНТР-ТЕРРОРИСТЫ | ОБЕЗВРЕДЬТЕ БОМБУ (E)';
+                gameActive = true;
+                playerObj.hp = 100;
+                playerObj.x = 0;
+                playerObj.z = 0;
+                kills = 0;
+                money = 5000;
+                bombPlanted = false;
+                defusing = false;
                 updateUI();
+                spawnBots();
             });
         });
-        document.getElementById('closeShop').addEventListener('click', () => {
-            document.getElementById('shop').classList.add('hidden');
+        
+        document.querySelectorAll('.shop-item').forEach(item => {
+            item.addEventListener('click', () => buyWeapon(item.dataset.weapon));
         });
+        document.getElementById('closeShop').addEventListener('click', () => document.getElementById('shop').classList.add('hidden'));
         
         // Свет
         const ambient = new THREE.AmbientLight(0x404060);
@@ -840,19 +583,11 @@
         scene.add(dirLight);
         
         window.addEventListener('click', () => {
-            if (document.pointerLockElement === renderer.domElement && gameActive) {
-                shoot();
-            }
+            if (document.pointerLockElement === renderer.domElement && gameActive && playerTeam) shoot();
         });
         
-        function animate() {
-            update();
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-        
+        function animate() { update(); renderer.render(scene, camera); requestAnimationFrame(animate); }
         animate();
-        console.log('🔥 CS: SIMPLE ЗАПУЩЕНА! Боты бегают, ставят и обезвреживают бомбу!');
     </script>
 </body>
 </html>
